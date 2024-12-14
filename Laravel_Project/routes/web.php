@@ -3,18 +3,13 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+use App\Http\Controllers\ReferenceController;
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+Route::get('/', [ReferenceController::class, 'index']);
+Route::post('/references', [ReferenceController::class, 'store']);
+Route::get('/export', [ReferenceController::class, 'export']);
+Route::get('/references/{id}/edit', [ReferenceController::class, 'edit'])->name('references.edit');
+Route::put('/references/{id}', [ReferenceController::class, 'update'])->name('references.update');
+Route::delete('/references/{id}', [ReferenceController::class, 'destroy'])->name('references.destroy');
 
 require __DIR__.'/auth.php';
