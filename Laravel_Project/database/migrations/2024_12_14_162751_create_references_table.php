@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('journal')->nullable();
             $table->year('year');
             $table->string('doi')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
-
     }
 
     /**

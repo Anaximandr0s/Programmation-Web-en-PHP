@@ -15,7 +15,7 @@
         }
 
         header {
-            background-color: #4CAF50;
+            background-color: #7B6ADA;
             color: white;
             padding: 10px 20px;
             text-align: center;
@@ -50,7 +50,7 @@
         }
 
         form button {
-            background-color: #4CAF50;
+            background-color: #7B6ADA;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -61,7 +61,7 @@
         }
 
         form button:hover {
-            background-color: #45a049;
+            background-color: #7B6ADA;
         }
 
         table {
@@ -80,7 +80,7 @@
         }
 
         th {
-            background-color: #4CAF50;
+            background-color: #7B6ADA;
             color: white;
         }
 
@@ -88,7 +88,7 @@
             display: inline-block;
             margin-top: 20px;
             text-decoration: none;
-            background-color: #4CAF50;
+            background-color: #7B6ADA;
             color: white;
             padding: 10px 20px;
             border-radius: 5px;
@@ -96,7 +96,7 @@
         }
 
         a:hover {
-            background-color: #45a049;
+            background-color: #7B6ADA;
         }
 
         .form-feedback {

@@ -169,82 +169,62 @@
 
     <main>
         <section>
-            <h2>Add a New Reference</h2>
-            <form action="/references" method="POST">
-                @csrf
-                <label for="title">Title:</label>
-                <input type="text" name="title" required>
-                <span class="form-feedback"></span>
-
-                <label for="authors">Authors:</label>
-                <input type="text" name="authors" required>
-                <span class="form-feedback"></span>
-
-                <label for="journal">Journal/Conference:</label>
-                <input type="text" name="journal">
-                <span class="form-feedback"></span>
-
-                <label for="year">Year:</label>
-                <input type="number" name="year" required>
-                <span class="form-feedback"></span>
-
-                <label for="doi">DOI:</label>
-                <input type="text" name="doi">
-                <span class="form-feedback"></span>
-
-                <button type="submit">Add Reference</button>
+            <!-- Search Bar Form -->
+            <form id="searchForm">
+                <label for="search-query">Enter DOI or Article Title:</label>
+                <input type="text" id="search-query" name="search-query" placeholder="e.g., 10.1109/5.771073 or Article Title" required>
+                <button type="submit">Search</button>
             </form>
-        </section>
 
-        <section>
-            <h2>Saved References</h2>
-            <!-- Make the table scrollable horizontally on smaller screens -->
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Authors</th>
-                            <th>Journal</th>
-                            <th>DOI</th>
-                            <th>Year</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($references as $ref)
-                        <tr>
-                            <td>{{ $ref->title }}</td>
-                            <td>{{ $ref->authors }}</td>
-                            <td>{{ $ref->journal }}</td>
-                            <td>{{ $ref->doi }}</td>
-                            <td>{{ $ref->year }}</td>
-                            <td>
-                                <a href="{{ route('references.edit', $ref->id) }}" class="btn btn-primary">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </a>
-
-                                <form action="{{ route('references.destroy', $ref->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this reference?')">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <!-- Search Results -->
+            <div id="search-results">
+                <!-- Results will be displayed here -->
             </div>
         </section>
-        <section>
-            <h2>Export</h2>
-            <a href="{{ route('export', ['format' => 'bibtex']) }}">Download BibTeX File</a>
-            <a href="{{ route('export', ['format' => 'csv']) }}">Download CSV File</a>
-            <a href="{{ route('export', ['format' => 'json']) }}">Download JSON File</a>
-            <a href="{{ route('export', ['format' => 'endnote']) }}">Download EndNote File</a>
-        </section>
-            </main>
+    </main>
+
+    <script>
+        // Handle search form submission
+        document.getElementById('searchForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const query = document.getElementById('search-query').value;
+            const resultsDiv = document.getElementById('search-results');
+            resultsDiv.innerHTML = ''; // Clear previous results
+
+            try {
+                // Fetch article data from CrossRef API
+                const response = await fetch(`https://api.crossref.org/works/${query}`);
+                const data = await response.json();
+
+                if (data.message) {
+                    const { title, author, 'container-title': journal, 'published-print': { 'date-parts': [[year]] }, abstract, DOI, publisher, 'subject': topics, 'link': links } = data.message;
+
+                    const authors = author.map(a => `${a.given} ${a.family}`).join(', ');
+                    const topicsText = topics ? topics.join(', ') : 'No subjects available';
+                    const abstractText = abstract ? abstract : 'No abstract available';
+                    const imageUrl = links && links.length > 0 ? links[0].URL : null;
+
+                    resultsDiv.innerHTML = `
+                        <h2>Article Details</h2>
+                        <p><strong>Title:</strong> ${title}</p>
+                        <p><strong>Authors:</strong> ${authors}</p>
+                        <p><strong>Journal:</strong> ${journal}</p>
+                        <p><strong>Year:</strong> ${year}</p>
+                        <p><strong>DOI:</strong> <a href="https://doi.org/${DOI}" target="_blank">${DOI}</a></p>
+                        <p><strong>Publisher:</strong> ${publisher}</p>
+                    `;
+                    if (imageUrl) {
+                        resultsDiv.innerHTML += `<p><strong>Image:</strong> <img src="${imageUrl}" alt="Image related to the article" width="300"></p>`;
+                    }
+
+                } else {
+                    resultsDiv.innerHTML = '<p>No results found. Please try again.</p>';
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = '<p>Error fetching data. Please try again later.</p>';
+            }
+        });
+    </script>
 </body>
 </html>

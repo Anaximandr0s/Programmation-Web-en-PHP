@@ -4,10 +4,24 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ReferenceController;
+use App\Http\Controllers\ArticleController;
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
+Route::get('/services', function () {
+    return view('services');
+})->name('services');
 
-Route::get('/', [ReferenceController::class, 'index']);
+Route::get('/search', function () {
+    return view('search');
+})->name('search');
+
+Route::get('/article/{doi}', [ArticleController::class, 'fetchArticleDetails']);
+
+Route::get('/RefManager', [ReferenceController::class, 'index'])->name('RefManager');
 Route::post('/references', [ReferenceController::class, 'store']);
-Route::get('/export', [ReferenceController::class, 'export']);
+Route::get('/export/{format?}', [ReferenceController::class, 'export'])->name('export');
+
 Route::get('/references/{id}/edit', [ReferenceController::class, 'edit'])->name('references.edit');
 Route::put('/references/{id}', [ReferenceController::class, 'update'])->name('references.update');
 Route::delete('/references/{id}', [ReferenceController::class, 'destroy'])->name('references.destroy');
