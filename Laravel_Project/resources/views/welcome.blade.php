@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <title>Scholar - Online School HTML5 Template</title>
+    <link rel="icon" type="image/png" href="favicon.ico">
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -161,9 +162,8 @@ https://templatemo.com/tm-586-scholar
               <img src="assets/images/service-02.png" alt="short courses">
             </div>
             <div class="main-content">
-              <h4>Research Organizer</h4>
-              <p>Streamline your workflow by organizing research materials, such as articles, papers, and notes, into structured folders or projects. Includes tagging, search, and collaboration features to enhance productivity.
-              </p>
+              <h4>DOI Explorer</h4>
+              <p>DOI Explorer is an intuitive online tool designed for researchers to effortlessly search for academic articles, papers, and resources using their DOI (Digital Object Identifier) or titles.</p>
               <div class="main-button">
                 <a href="#">Read More</a>
               </div>

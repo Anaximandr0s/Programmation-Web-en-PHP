@@ -5,6 +5,7 @@
       <title>Popup Login Form Design | CodingNepal</title>
       <link rel="stylesheet" href="assets/css/login.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+      <link rel="icon" type="image/png" href="favicon.ico">
    </head>
    <body>
       <div class="center">

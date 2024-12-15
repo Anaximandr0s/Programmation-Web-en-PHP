@@ -4,7 +4,6 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ReferenceController;
-use App\Http\Controllers\ArticleController;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -13,10 +12,9 @@ Route::get('/services', function () {
 })->name('services');
 
 Route::get('/search', function () {
-    return view('search');
+    return view('search.search');
 })->name('search');
 
-Route::get('/article/{doi}', [ArticleController::class, 'fetchArticleDetails']);
 
 Route::get('/RefManager', [ReferenceController::class, 'index'])->name('RefManager');
 Route::post('/references', [ReferenceController::class, 'store']);

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Research Reference Manager</title>
+    <link rel="icon" type="image/png" href="favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -138,7 +139,7 @@
                             <h4>Reference Manager</h4>
                             <p>A comprehensive tool to efficiently manage and organize your research references, including support for importing, exporting, and formatting citations in multiple styles like APA, MLA, and BibTeX.</p>
                             <div class="main-button">
-                                <a href="{{ route('RefManager') }}">Read More</a>
+                                <a href="{{ route('RefManager') }}" target="_blank">Read More</a>
                             </div>
                         </div>
                     </div>
@@ -150,10 +151,10 @@
                             <img src="assets/images/service-02.png" alt="Research Organizer" />
                         </div>
                         <div class="main-content">
-                            <h4>Research Organizer</h4>
-                            <p>Streamline your workflow by organizing research materials, such as articles, papers, and notes, into structured folders or projects. Includes tagging, search, and collaboration features to enhance productivity.</p>
+                            <h4>DOI Explorer</h4>
+                            <p>DOI Explorer is an intuitive online tool designed for researchers to effortlessly search for academic articles, papers, and resources using their DOI (Digital Object Identifier) or titles.</p>
                             <div class="main-button">
-                                <a href="">Read More</a>
+                                <a href="{{ route('search') }}" target="_blank">Read More</a>
                             </div>
                         </div>
                     </div>
