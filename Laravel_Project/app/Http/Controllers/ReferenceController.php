@@ -7,24 +7,26 @@ use App\Models\Reference;
 
 class ReferenceController extends Controller
 {
+    // Fonction pour afficher la liste des références de l'utilisateur connecté
     public function index()
     {
-        // Check if the user is authenticated
+        // Vérifie si l'utilisateur est authentifié
         if (!auth()->check()) {
-            // If not authenticated, redirect to the login page
+            // Si non authentifié, redirige vers la page de connexion
             return redirect()->route('login');
         }
 
-        // Get references of the logged-in user
+        // Récupère les références de l'utilisateur connecté
         $references = auth()->user()->references;
 
-        // Return the view with the references
+        // Retourne la vue avec les références
         return view('references.index', compact('references'));
     }
 
+    // Fonction pour ajouter une nouvelle référence
     public function store(Request $request)
     {
-        // Validate the incoming request
+        // Valide les données de la requête
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'authors' => 'required|string',
@@ -33,18 +35,20 @@ class ReferenceController extends Controller
             'doi' => 'nullable|string|max:255',
         ]);
 
-        // Create a reference associated with the logged-in user
+        // Crée une référence associée à l'utilisateur connecté
         auth()->user()->references()->create($validated);
 
-        return redirect('/RefManager')->with('success', 'Reference added successfully!');
-
+        // Redirige avec un message de succès
+        return redirect('/RefManager')->with('success', 'Référence ajoutée avec succès !');
     }
 
-    // Function to export references in BibTeX format for the logged-in user
+    // Fonction pour exporter les références dans différents formats
     public function export($format = 'bibtex')
     {
-        $references = auth()->user()->references; // Export only the logged-in user's references
+        // Récupère les références de l'utilisateur connecté
+        $references = auth()->user()->references;
 
+        // Génère le contenu selon le format demandé
         if ($format == 'bibtex') {
             $content = $this->generateBibtex($references);
             $contentType = 'text/plain';
@@ -62,17 +66,19 @@ class ReferenceController extends Controller
             $contentType = 'text/plain';
             $fileName = 'references.enw';
         } else {
-            // Default to bibtex if format is unknown
+            // Par défaut, utilise le format BibTeX
             $content = $this->generateBibtex($references);
             $contentType = 'text/plain';
             $fileName = 'references.bib';
         }
 
+        // Retourne la réponse avec le fichier généré
         return response($content)
             ->header('Content-Type', $contentType)
             ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
     }
 
+    // Fonction pour générer le contenu au format BibTeX
     private function generateBibtex($references)
     {
         $bibtex = '';
@@ -90,6 +96,7 @@ class ReferenceController extends Controller
         return $bibtex;
     }
 
+    // Fonction pour générer le contenu au format CSV
     private function generateCsv($references)
     {
         $csv = "Title,Authors,Journal,DOI,Year\n";
@@ -103,11 +110,13 @@ class ReferenceController extends Controller
         return $csv;
     }
 
+    // Fonction pour générer le contenu au format JSON
     private function generateJson($references)
     {
         return $references->toJson();
     }
 
+    // Fonction pour générer le contenu au format EndNote
     private function generateEndNote($references)
     {
         $endnote = '';
@@ -125,29 +134,31 @@ class ReferenceController extends Controller
         return $endnote;
     }
 
-    // Function to show the form for updating the reference
+    // Fonction pour afficher le formulaire de modification d'une référence
     public function edit($id)
     {
         $reference = Reference::findOrFail($id);
 
-        // Check if the logged-in user owns the reference
+        // Vérifie que l'utilisateur connecté possède la référence
         if ($reference->user_id !== auth()->id()) {
-            return redirect()->route('references.index')->with('error', 'You are not authorized to edit this reference.');
+            return redirect()->route('references.index')->with('error', 'Vous n\'êtes pas autorisé à modifier cette référence.');
         }
 
+        // Retourne la vue d'édition avec la référence
         return view('references.edit', compact('reference'));
     }
 
-    // Function to update the reference in the database
+    // Fonction pour mettre à jour une référence
     public function update(Request $request, $id)
     {
         $reference = Reference::findOrFail($id);
 
-        // Check if the logged-in user owns the reference
+        // Vérifie que l'utilisateur connecté possède la référence
         if ($reference->user_id !== auth()->id()) {
-            return redirect()->route('references.index')->with('error', 'You are not authorized to edit this reference.');
+            return redirect()->route('references.index')->with('error', 'Vous n\'êtes pas autorisé à modifier cette référence.');
         }
 
+        // Valide les données de la requête
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'authors' => 'required|string',
@@ -156,24 +167,27 @@ class ReferenceController extends Controller
             'doi' => 'nullable|string|max:255',
         ]);
 
+        // Met à jour la référence avec les données validées
         $reference->update($validated);
 
-        return redirect('/RefManager')->with('success', 'Reference updated successfully!');
+        // Redirige avec un message de succès
+        return redirect('/RefManager')->with('success', 'Référence mise à jour avec succès !');
     }
 
-    // Function to delete the reference
+    // Fonction pour supprimer une référence
     public function destroy($id)
     {
         $reference = Reference::findOrFail($id);
 
-        // Check if the logged-in user owns the reference
+        // Vérifie que l'utilisateur connecté possède la référence
         if ($reference->user_id !== auth()->id()) {
-            return redirect()->route('references.index')->with('error', 'You are not authorized to delete this reference.');
+            return redirect()->route('references.index')->with('error', 'Vous n\'êtes pas autorisé à supprimer cette référence.');
         }
 
+        // Supprime la référence
         $reference->delete();
 
-        return redirect('/RefManager')->with('success', 'Reference deleted successfully!');
-
+        // Redirige avec un message de succès
+        return redirect('/RefManager')->with('success', 'Référence supprimée avec succès !');
     }
 }
